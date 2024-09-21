@@ -1,0 +1,76 @@
+# templates/deployment.yaml
+
+# Producer Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: producer
+  template:
+    metadata:
+      labels:
+        app: producer
+    spec:
+      serviceAccountName: {{ .Values.producer.serviceAccount.name }}
+      containers:
+        - name: producer
+          image: "{{ .Values.producer.image.repository }}:{{ .Values.producer.image.tag }}"
+          imagePullPolicy: "{{ .Values.producer.image.pullPolicy }}"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: RABBITMQ_PORT
+              value: "{{ .Values.rabbitmq.port }}"
+            - name: RABBITMQ_HOST
+              value: "{{ .Values.rabbitmq.host }}"
+            - name: RABBITMQ_USER
+              value: "{{ .Values.rabbitmq.user }}"
+            - name: RABBITMQ_PASSWORD
+              value: "{{ .Values.rabbitmq.password }}"
+            - name: MESSAGE
+              value: "{{ .Values.producer.message }}"
+            - name: RUNS
+              value: "{{ .Values.producer.runs }}"
+
+          command: [ "python" ]
+          args: [ "/app/producer.py", "--port", "$(RABBITMQ_PORT)", "-s", "$(RABBITMQ_HOST)", "-u", "$(RABBITMQ_USER)", "-ps", "$(RABBITMQ_PASSWORD)", "-m", "$(MESSAGE)", "-r", "$(RUNS)"]
+
+---
+
+# Consumer Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name}}-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      serviceAccountName: {{ .Values.consumer.serviceAccount.name }}
+      containers:
+        - name: consumer
+          image: "{{ .Values.consumer.image.repository }}:{{ .Values.consumer.image.tag }}"
+          imagePullPolicy: "{{ .Values.consumer.image.pullPolicy }}"
+          ports:
+            - containerPort: 8081
+          env:
+            - name: RABBITMQ_PORT
+              value: "{{ .Values.rabbitmq.port }}"
+            - name: RABBITMQ_HOST
+              value: "{{ .Values.rabbitmq.host }}"
+            - name: RABBITMQ_USER
+              value: "{{ .Values.rabbitmq.user }}"
+            - name: RABBITMQ_PASSWORD
+              value: "{{ .Values.rabbitmq.password }}"
+          command: [ "python" ]
+          args: [ "/app/consumer.py", "--port", "$(RABBITMQ_PORT)", "-s", "$(RABBITMQ_HOST)", "-u", "$(RABBITMQ_USER)", "-ps", "$(RABBITMQ_PASSWORD)"]

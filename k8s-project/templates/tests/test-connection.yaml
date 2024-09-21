@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "k8s-project.fullname" . }}-test-connection"
+  labels:
+    {{- include "k8s-project.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['sh', '-c']
+      args:
+        - >
+          echo "Testing Producer connection..." &&
+          wget --spider --server-response {{ include "k8s-project.fullname" . }}-producer:{{ .Values.producer.service.port }} 2>&1 &&
+          echo "Producer connection successful" || echo "Producer connection failed" &&
+
+          echo "Testing Consumer connection..." &&
+          wget --spider --server-response {{ include "k8s-project.fullname" . }}-consumer:{{ .Values.consumer.service.port }} 2>&1 &&
+          echo "Consumer connection successful" || echo "Consumer connection failed";
+  restartPolicy: Never

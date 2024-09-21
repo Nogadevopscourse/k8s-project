@@ -1,0 +1,7 @@
+apiVersion: v2
+name: k8s-project
+description: A Helm chart for producer and consumer
+type: application
+version: 0.1.0
+dependencies: []
+
