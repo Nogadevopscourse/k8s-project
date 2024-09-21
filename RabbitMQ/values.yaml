@@ -1,0 +1,40 @@
+# Default values for RabbitMQ.
+
+## RabbitMQ authentication settings
+auth:
+  username: myuser
+  password: mypassword
+
+# RabbitMQ service settings
+service:
+  type: ClusterIP         # Expose RabbitMQ using ClusterIP service
+  port: 5672              # Port for RabbitMQ
+  managementPort: 15672   # Port for RabbitMQ Management Console
+
+# Set this to true to enable the management plugin
+management:
+  enabled: true
+
+# Resources requests and limits
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "500m"
+  limits:
+    memory: "1Gi"
+    cpu: "1"
+
+# RabbitMQ persistence settings
+persistence:
+  enabled: true
+  storageClass: "standard"  # or your storage class name
+  accessModes:
+    - ReadWriteOnce
+  size: 8Gi
+
+# Replica settings
+replicaCount: 1
+
+# Enable or disable RabbitMQ cluster
+cluster:
+  enabled: false

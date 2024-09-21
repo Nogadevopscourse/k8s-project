@@ -9,6 +9,8 @@ if __name__ == '__main__':
                                  epilog=examples)
     parser.add_argument('-p', '--port', action='store', dest='port', help='The port to listen on.')
     parser.add_argument('-s', '--server', action='store', dest='server', help='The RabbitMQ server.')
+    parser.add_argument('-u', '--user', action='store', dest='user', help='The RabbitMQ user.')
+    parser.add_argument('-ps', '--password', action='store', dest='password', help='The RabbitMQ password.')
     parser.add_argument('-m', '--message', action='store', dest='message', help='The message to send', required=False, default='Hello')
     parser.add_argument('-r', '--repeat', action='store', dest='repeat', help='Number of times to repeat the message', required=False, default='30')
 
@@ -19,6 +21,13 @@ if __name__ == '__main__':
     if args.server == None:
         print "Missing required argument: -s/--server"
         sys.exit(1)
+    if args.user == None:
+        print ("Missing required argument: -u/--user")
+        sys.exit(1)
+    if args.password == None:
+        print ("Missing required argument: -ps/--password")
+        sys.exit(1)
+
 
     # sleep a few seconds to allow RabbitMQ server to come up
     sleep(5)
