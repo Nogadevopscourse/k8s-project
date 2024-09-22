@@ -9,7 +9,7 @@ rabbitmq:
 producer:
   image:
     repository: nogayehudai/producer
-    tag: 1.0.1
+    tag: latest
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -23,7 +23,7 @@ producer:
 consumer:
   image:
     repository: nogayehudai/consumer
-    tag: 1.0.1
+    tag: latest
     pullPolicy: Always
   service:
     type: ClusterIP
