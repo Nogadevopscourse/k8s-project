@@ -14,6 +14,8 @@ service:
 # Set this to true to enable the management plugin
 management:
   enabled: true
+image:
+  debug: true
 
 # Resources requests and limits
 resources:
@@ -27,41 +29,15 @@ resources:
 # RabbitMQ persistence settings
 persistence:
   enabled: true
-  storageClass: "standard"  # or your storage class name
+  storageClass: "linode-block-storage-retain"  # or your storage class name
   accessModes:
     - ReadWriteOnce
-  size: 8Gi
-
+  size: 10Gi
+#persistentVolumeClaim:
+#      claimName: rabbitmq-pvc
 # Replica settings
 replicaCount: 1
 
 # Enable or disable RabbitMQ cluster
 cluster:
   enabled: false
-
-metrics:
-  enabled: true
-  image:
-    repository: kbudde/rabbitmq-exporter
-    tag: v0.36.0  # You can specify the version
-    pullPolicy: IfNotPresent
-
-  serviceMonitor:
-    enabled: true
-    interval: 10s  # Scrape interval
-    scrapeTimeout: 10s
-    namespace: default  # Use the namespace where your monitoring tools are deployed
-    labels:
-      release: prometheus  # Change this to match your Prometheus release name
-
-  prometheusRule:
-    enabled: true
-    rules:
-      - alert: RabbitMQDown
-        expr: up{job="rabbitmq"} == 0
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          description: "RabbitMQ instance is down"
-          summary: "RabbitMQ is down"
