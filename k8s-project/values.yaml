@@ -10,7 +10,7 @@ producer:
   image:
     repository: nogayehudai/producer
     tag: latest
-    pullPolicy: 1.0.3
+    pullPolicy: latest
   service:
     type: ClusterIP
     port: 8080
