@@ -10,7 +10,7 @@ producer:
   image:
     repository: nogayehudai/producer
     tag: latest
-    pullPolicy: Always
+    pullPolicy: 1.0.3
   service:
     type: ClusterIP
     port: 8080
@@ -18,7 +18,7 @@ producer:
     create: true
     name: "producer-sa"
   message: "Hello from Producer"   # Add message to send
-  runs: 5                          # Add the number of runs
+  runs: 5   # Add the number of runs
 
 consumer:
   image:
